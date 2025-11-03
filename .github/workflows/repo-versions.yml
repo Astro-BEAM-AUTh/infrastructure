@@ -1,0 +1,63 @@
+name: Post Org Versions to Discord
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # Runs every Sunday at midnight
+  workflow_dispatch:     # allows manual trigger
+
+jobs:
+  post-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ensure required tools are available
+        run: |
+          set -e
+          echo "Checking for required tools..."
+          if ! command -v curl >/dev/null 2>&1; then
+            echo "Installing curl..."
+            sudo apt-get update && sudo apt-get install -y curl
+          else
+            echo "curl already available"
+          fi
+
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "Installing jq..."
+            sudo apt-get update && sudo apt-get install -y jq
+          else
+            echo "jq already available"
+          fi
+
+      - name: Fetch and post versions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          ORG_NAME: Astro-BEAM-AUTh
+        run: |
+          echo "Fetching repositories for $ORG_NAME..."
+
+          # Fetch all repos
+          repos=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/orgs/$ORG_NAME/repos?per_page=100" | jq -r '.[].name')
+
+          message="📦 **Latest Versions for $ORG_NAME**\n"
+
+          for repo in $repos; do
+            # Fetch latest release
+            release=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/$ORG_NAME/$repo/releases/latest")
+
+            tag=$(echo "$release" | jq -r '.tag_name // empty')
+
+            if [ -z "$tag" ] || [ "$tag" = "null" ]; then
+              tag="(no release)"
+            fi
+
+            message="$message• **$repo** → $tag\n"
+          done
+
+          # Post to Discord
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"$message\"}" \
+               "$DISCORD_WEBHOOK"

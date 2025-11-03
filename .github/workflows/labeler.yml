@@ -1,0 +1,11 @@
+name: 🏷️ Labeler
+on:
+  workflow_call: # This makes the workflow reusable by other repos' workflows
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5

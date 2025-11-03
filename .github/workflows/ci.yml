@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  workflow_call: # This makes the workflow reusable by other repos' workflows
+  # The following is when the expected final trigger would be called
+  # pull_request:
+  #   branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version-file: ".python-version"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+    
+    - name: Install the project dependencies
+      run: uv sync --locked --all-extras --dev
+    
+    - name: Install tox
+      run: uv tool install tox --with tox-uv
+
+    - name: Run linter & tests (if any)
+      run: tox --parallel

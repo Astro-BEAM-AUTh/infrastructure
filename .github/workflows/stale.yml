@@ -1,0 +1,17 @@
+name: ⏳ Stale Issues
+on:
+  workflow_call: # This makes the workflow reusable by other repos' workflows
+  schedule:
+    - cron: "0 0 * * 0"  # Runs every Sunday at midnight
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: -1
+          stale-issue-label: "stale"
+          stale-issue-message: "This issue has been marked as stale due to inactivity."
+          stale-pr-message: "This PR has been inactive for 60 days and will be closed soon."
