@@ -11,6 +11,7 @@ Deployment automation & DevOps scripts
     - [Stale Issues and PRs (`stale.yml`):](#stale-issues-and-prs-staleyml)
     - [Python Testing and Linting (`ci.yml`):](#python-testing-and-linting-ciyml)
     - [Python Semantic Release and Changelog Generation (`semantic-release.yml`):](#python-semantic-release-and-changelog-generation-semantic-releaseyml)
+    - [Angular Deployment and Release (`deploy-and-release.yml`):](#angular-deployment-and-release-deploy-and-releaseyml)
 
 ## Repository Structure
 ### GitHub Workflows
@@ -37,3 +38,10 @@ Deployment automation & DevOps scripts
 > Reusable workflow for all Astro repositories.
 - Automates the release process by generating changelogs and creating new releases based on commit messages of Python projects.
 - Is expected to be triggered on pushes to the `main` branch and also to be manually triggered via workflow dispatch.
+
+#### Angular Deployment and Release (`deploy-and-release.yml`):
+> Reusable workflow for all Astro repositories using Angular.
+- Builds and deploys Angular applications to GitHub Pages.
+- Is expected to be triggered on pushes to the `main` branch and also to be manually triggered via workflow dispatch.
+- Build artifacts are dynamically named based on the repository name to support multiple repositories using this workflow.
+- Deployment is done to the `github-pages` environment, which needs to be set up in each repository using this workflow.
