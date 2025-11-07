@@ -40,7 +40,6 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: ./package-lock.json
           
       - name: Install dependencies
         run: npm ci
@@ -49,7 +48,20 @@ jobs:
         id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --dry-run
+        run: |
+          # Run semantic-release in dry-run mode and capture output
+          output=$(npx semantic-release --dry-run 2>&1)
+          echo "$output"
+          
+          # Check if a release would be published
+          if echo "$output" | grep -q "Published release.*on default channel"; then
+            echo "new-release-published=true" >> $GITHUB_OUTPUT
+            # Extract version number
+            version=$(echo "$output" | grep "Published release" | sed -n 's/.*Published release \([0-9.]*\) on.*/\1/p')
+            echo "new-release-version=$version" >> $GITHUB_OUTPUT
+          else
+            echo "new-release-published=false" >> $GITHUB_OUTPUT
+          fi
 
   build:
     name: Build Angular App
@@ -68,7 +80,6 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: ./package-lock.json
           
       - name: Install dependencies
         run: npm ci
@@ -88,7 +99,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: github-pages # Ignore the linting warning here, this is because 'github-pages' environment is not set in this repo, but this is a reusable workflow intended to be called from other repos
       url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
@@ -130,7 +141,6 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: ./package-lock.json
           
       - name: Install dependencies
         run: npm ci
