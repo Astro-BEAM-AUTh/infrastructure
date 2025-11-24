@@ -6,7 +6,7 @@ Deployment automation & DevOps scripts
 ## Table of Contents
 - [Repository Structure](#repository-structure)
   - [GitHub Workflows](#github-workflows)
-    - [Repo Version Reporter (`repo-version-reporter.yml`):](#repo-version-reporter-repo-version-reporteryml)
+    - [Repo Version Reporter (`repo-version.yml`):](#repo-version-reporter-repo-versionyml)
     - [Labeler (`labeler.yml`):](#labeler-labeleryml)
     - [Stale Issues and PRs (`stale.yml`):](#stale-issues-and-prs-staleyml)
     - [Python Testing and Linting (`ci.yml`):](#python-testing-and-linting-ciyml)
@@ -15,7 +15,7 @@ Deployment automation & DevOps scripts
 
 ## Repository Structure
 ### GitHub Workflows
-#### Repo Version Reporter (`repo-version-reporter.yml`):
+#### Repo Version Reporter (`repo-version.yml`):
 - A GitHub Action that runs weekly to report the latest release versions of all Astro repositories to a specified Discord channel via a WebHook.
 - Helps the team stay updated on the latest versions of each repository for maintenance and integration purposes.
 

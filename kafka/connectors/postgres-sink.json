@@ -1,0 +1,38 @@
+{
+  "name": "postgres-telescope-data-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "2",
+    "topics": "telescope.data",
+    
+    "connection.url": "jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:astro_telescope}",
+    "connection.user": "${DB_USER:postgres}",
+    "connection.password": "${DB_PASSWORD:postgres}",
+    
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url": "http://schema-registry:8081",
+    
+    "auto.create": "true",
+    "auto.evolve": "true",
+    "insert.mode": "insert",
+    "table.name.format": "telescope_data_raw",
+    "pk.mode": "record_value",
+    "pk.fields": "data_id",
+    
+    "batch.size": 100,
+    "max.retries": 10,
+    "retry.backoff.ms": 3000,
+    
+    "errors.tolerance": "all",
+    "errors.log.enable": "true",
+    "errors.log.include.messages": "true",
+    "errors.deadletterqueue.topic.name": "telescope.data.dlq",
+    "errors.deadletterqueue.topic.replication.factor": "1",
+    "errors.deadletterqueue.context.headers.enable": "true",
+    
+    "transforms": "addTimestamp",
+    "transforms.addTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.addTimestamp.timestamp.field": "sink_timestamp"
+  }
+}
