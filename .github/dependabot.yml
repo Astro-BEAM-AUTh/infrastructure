@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps): "
+    labels:
+      - "dependencies"
+      - "github-actions"
+    assignees:
+      - "dyka3773"
+    # target-branch: "main" # This config is not really needed in this repo
+    groups:
+      github-action-dependencies:
+        patterns:
+          - "*"
