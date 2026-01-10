@@ -49,7 +49,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Run semantic-release in dry-run mode and capture output
-          output=$(npx semantic-release --dry-run 2>&1)
+          output=$(npx semantic-release --dry-run 2>&1) || true
           echo "$output"
           
           # Check if a release would be published
