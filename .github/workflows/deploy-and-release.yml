@@ -26,7 +26,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new-release-published: ${{ steps.semantic.outputs.new-release-published }}
-      new-release-version: ${{ steps.semantic.outputs.new-release-version }}
     
     steps:
       - name: Checkout repository
@@ -56,11 +55,8 @@ jobs:
           # Check if a release would be published
           if echo "$output" | grep -q "Published release.*on default channel"; then
             echo "new-release-published=true" >> $GITHUB_OUTPUT
-            # Extract version number
-            version=$(echo "$output" | grep "Published release" | sed -n 's/.*Published release \([0-9.]*\) on.*/\1/p')
-            echo "new-release-version=$version" >> $GITHUB_OUTPUT
           else
-            echo "new-release-published=false" >> $GITHUB_OUTPUT
+            echo "new-release-published=false" >> $GITHUB_OUTPUT # This is not really needed, but for clarity
           fi
 
   build:
