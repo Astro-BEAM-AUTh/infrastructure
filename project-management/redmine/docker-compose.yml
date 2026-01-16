@@ -1,0 +1,19 @@
+services:
+
+  redmine:
+    image: redmine
+    restart: always
+    ports:
+      - 8081:3000
+    environment:
+      # Replace these values in production
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: example
+      REDMINE_SECRET_KEY_BASE: supersecretkey
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: redmine

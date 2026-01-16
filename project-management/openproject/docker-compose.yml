@@ -1,0 +1,25 @@
+services:
+  openproject:
+    image: openproject/openproject:17
+    restart: always
+    ports:
+      - 8082:80
+    environment:
+      # Replace with the actual properties here in production
+      SECRET_KEY_BASE: supersecretkey
+      OPENPROJECT_HOST__NAME: localhost:8082
+      OPENPROJECT_HTTPS: "true"
+      DATABASE_URL: postgres://openproject:openproject@db/openproject
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: openproject
+      POSTGRES_PASSWORD: openproject
+      POSTGRES_DB: openproject
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
