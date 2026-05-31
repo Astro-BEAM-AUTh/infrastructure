@@ -93,17 +93,8 @@ jobs:
           NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
           NG_APP_DEBUG_GUEST_HISTORY: ${{ secrets.NG_APP_DEBUG_GUEST_HISTORY }}
           NG_APP_BACKEND_URL: ${{ secrets.NG_APP_BACKEND_URL }}
+          NG_APP_OBSERVATION_HISTORY_REFRESH_MS: 30000
         
-      - name: Test env variables are set (sanity check)
-        run: |
-          if [ -z "$NG_APP_SUPABASE_URL" ] || [ -z "$NG_APP_SUPABASE_ANON_KEY" ] || [ -z "$NG_APP_BACKEND_URL" ]; then
-            echo "One or more required environment variables are not set!"
-            exit 1
-          fi
-        env:
-          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
-          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
-          NG_APP_BACKEND_URL: ${{ secrets.NG_APP_BACKEND_URL }}
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
         with:
