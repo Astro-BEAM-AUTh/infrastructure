@@ -1,7 +1,13 @@
 name: Deploy and Release Apps
 
 on:
-    workflow_call: # This makes the workflow reusable by other repos' workflows
+  workflow_call:
+    inputs:
+      redeploy:
+        description: Force build and deploy even when no new release is published
+        required: false
+        type: boolean
+        default: false
   # The following is when the expected final trigger would be called
   # push:
   #   branches: [ main ]
@@ -62,7 +68,7 @@ jobs:
   build:
     name: Build Angular App
     needs: check-release
-    if: needs.check-release.outputs.new-release-published == 'true'
+    if: inputs.redeploy || needs.check-release.outputs.new-release-published == 'true'
     runs-on: ubuntu-latest
     
     steps:
@@ -123,6 +129,7 @@ jobs:
   release:
     name: Semantic Release
     needs: deploy
+    if: ${{ !inputs.redeploy }}
     runs-on: ubuntu-latest
     
     steps:
