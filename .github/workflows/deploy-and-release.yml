@@ -88,6 +88,11 @@ jobs:
         
       - name: Build for production
         run: npm run github-build
+        env:
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          NG_APP_DEBUG_GUEST_HISTORY: ${{ secrets.NG_APP_DEBUG_GUEST_HISTORY }}
+          NG_APP_BACKEND_URL: ${{ secrets.NG_APP_BACKEND_URL }}
         
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
