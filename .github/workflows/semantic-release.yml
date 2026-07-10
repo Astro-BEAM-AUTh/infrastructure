@@ -95,8 +95,12 @@ jobs:
           type=ref,event=branch
           type=sha
           type=semver,pattern={{version}},enable=true
+          type=raw,value=${{ needs.release.outputs.tag }},enable=${{ needs.release.outputs.released == 'true' }}
         flavor: |
-          latest=true  
+          latest=true
+        labels: |
+          org.opencontainers.image.version=${{ needs.release.outputs.tag || github.sha }}
+          org.opencontainers.image.revision=${{ github.sha }}
 
     - name: Build and push Docker image (latest)
       uses: docker/build-push-action@v6
