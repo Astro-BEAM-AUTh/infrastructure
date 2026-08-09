@@ -60,7 +60,7 @@ jobs:
   
   docker:
     needs: release
-    if: needs.release.outputs.tag != '' || inputs.redeploy
+    if: needs.release.outputs.released == 'true' || inputs.redeploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
